@@ -25,23 +25,22 @@ export default class Hog extends Component {
 	}
 
 	hide = () => {
-		this.setState({
-			hidden: !this.state.hidden
-		})
+		this.setImage()
 	}
 
 	hogImage = () => {
 		return (
-			<div className='image'>
+			<div className='image' onClick={this.handleClick}>
 					<img src={this.state.imageUrl}/>
 			</div>
 		)
 	}
 
 	setImage = () => {
-		if (!this.state.hidden) {
+		if (this.state.hidden) {
 			this.setState({
-				imageUrl: `/hog-imgs/${this.picName(this.props.hog.name)}`
+				imageUrl: `/hog-imgs/${this.picName(this.props.hog.name)}`,
+				hidden: !this.state.hidden
 			}) 
 		}
 		else {
@@ -63,14 +62,15 @@ export default class Hog extends Component {
 	}
 
 	randomPiglet = () => {
-		fetch('https://api.giphy.com/v1/gifs/random?tag=piglets&api_key=d32c82cd24b34bac8c8959b9c62ad18f&limit=1').then(res => this.setState({imageUrl: res.image_url}))
-
+		fetch('https://api.giphy.com/v1/gifs/random?tag=miss+piggy&api_key=d32c82cd24b34bac8c8959b9c62ad18f&limit=1')
+			.then((res) => res.json() )
+				.then(res => this.setState({imageUrl: res.data.image_url, hidden: !this.state.hidden}))
 	}
 
 
 	render() {
 		return (
-			<div className='ui card' onClick={this.handleClick} >
+			<div className='ui card' >
 				{this.hogImage()}
 				{!this.state.hidden && this.hogContent() }
 				<button className='ui toggle button' onClick={this.hide}>{this.state.hidden ? 'show' : 'hide'}</button>
